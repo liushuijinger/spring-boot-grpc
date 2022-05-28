@@ -1,0 +1,11 @@
+
+server:
+  port: 8080
+
+
+#新版本写法，这里的grpc-server是什么，service中的注解值就是什么
+grpc:
+  client:
+    grpc-server:
+      address: static://127.0.0.1:9090
+      negotiationType: plaintext
