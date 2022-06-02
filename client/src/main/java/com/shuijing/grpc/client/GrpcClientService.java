@@ -6,6 +6,7 @@ import com.shuijing.grpc.api.HelloGRPCServiceGrpc;
 import com.shuijing.grpc.api.ProtobufBeanUtil;
 import com.shuijing.grpc.api.User;
 import com.shuijing.grpc.api.UserGrpc;
+import io.grpc.stub.ClientCallStreamObserver;
 import io.grpc.stub.StreamObserver;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class GrpcClientService {
 
     public User getUser(Long id) throws IOException {
         final UserGrpc userGrpc = stub.getUser(Int64Value.of(id));
+//        final UserGrpc userGrpc = stub.withDeadlineAfter(1000L, TimeUnit.MILLISECONDS).getUser(Int64Value.of(id));
 
         return ProtobufBeanUtil.toPojoBean(User.class, userGrpc);
     }
@@ -83,7 +85,8 @@ public class GrpcClientService {
 
             @Override
             public void onError(Throwable t) {
-
+                log.error("client error");
+                finishLatch.countDown();
             }
 
             @Override
@@ -99,6 +102,11 @@ public class GrpcClientService {
 
         for (UserGrpc userGrpc : userGrpcList) {
             updateUserRequestObserver.onNext(userGrpc);
+            if ("xiaoshui".equals(userGrpc.getName())) {
+                ((ClientCallStreamObserver) updateUserRequestObserver).cancel("", new RuntimeException());
+                log.info("client cancel");
+                break;
+            }
             Thread.sleep(2000L);
         }
 
@@ -133,7 +141,7 @@ public class GrpcClientService {
 
             @Override
             public void onError(Throwable t) {
-
+                finishLatch.countDown();
             }
 
             @Override

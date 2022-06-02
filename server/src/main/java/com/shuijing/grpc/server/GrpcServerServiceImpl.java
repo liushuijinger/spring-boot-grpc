@@ -11,7 +11,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,7 +54,8 @@ public class GrpcServerServiceImpl extends HelloGRPCServiceGrpc.HelloGRPCService
         UserGrpc userGrpc = null;
         try {
             userGrpc = ProtobufBeanUtil.toProtoBean(UserGrpc.newBuilder(), user);
-        } catch (IOException e) {
+//            Thread.sleep(1100L);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         responseObserver.onNext(userGrpc);
@@ -136,7 +136,7 @@ public class GrpcServerServiceImpl extends HelloGRPCServiceGrpc.HelloGRPCService
 
             @Override
             public void onError(Throwable t) {
-
+                log.info(" error " + t.getMessage());
             }
 
             @Override

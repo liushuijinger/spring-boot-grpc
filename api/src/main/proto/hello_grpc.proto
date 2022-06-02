@@ -1,19 +1,22 @@
 //版本
 syntax = "proto3";
 
-option java_multiple_files = true;
-// grpc插件生成的类的包名
-option java_package = "com.shuijing.grpc.api";
+package grpc;
 
 import "google/protobuf/wrappers.proto";
+
+option java_multiple_files = true;
+
+option java_package = "com.shuijing.grpc.api";
+
 
 // grpc的方法
 service HelloGRPCService {
   rpc SayHello(google.protobuf.StringValue) returns (google.protobuf.StringValue);
   rpc GetUser(google.protobuf.Int64Value) returns (UserGrpc);
-  rpc searchUsers(google.protobuf.StringValue) returns (stream UserGrpc);
-  rpc updateUsers(stream UserGrpc) returns (google.protobuf.StringValue);
-  rpc processUsers(stream google.protobuf.Int64Value) returns (stream UserGrpc);
+  rpc SearchUsers(google.protobuf.StringValue) returns (stream UserGrpc);
+  rpc UpdateUsers(stream UserGrpc) returns (google.protobuf.StringValue);
+  rpc ProcessUsers(stream google.protobuf.Int64Value) returns (stream UserGrpc);
 }
 
 // 出参对象
@@ -21,6 +24,6 @@ message UserGrpc {
   int64 id = 1;
   string name = 2;
   int32 age = 3;
-  int64 createTime=10;
-  int64 updateTime=11;
+  int64 create_time=10;
+  int64 update_time=11;
 }
